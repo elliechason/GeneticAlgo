@@ -1,5 +1,6 @@
 package model;
 
+
 public class Room {
 	private String number; //Room Number (Physical)
 	private int seatingCapacity; //Number of students can be accommodated in the room
