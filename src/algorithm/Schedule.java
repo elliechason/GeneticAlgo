@@ -1,5 +1,7 @@
 package algorithm;
 import java.util.ArrayList;
+import java.util.Random;
+
 import model.Class;
 import model.Department;
 
@@ -19,19 +21,33 @@ public class Schedule {
 		classes = new ArrayList<Class>(data.getNumberOfClasses());
 	}
 	
-	public Schedule initialize() {
+	public Schedule initialize(Random generator) {
 		new ArrayList<Department>(data.getDepts()).forEach(dept -> {
 			dept.getCourses().forEach(course -> {
 				Class newClass = new Class(classNumb++, dept, course);
-				newClass.setMeetingTime(data.getMeetingTimes().get((int) (data.getMeetingTimes().size() * Math.random())));
-				newClass.setRoom(data.getRooms().get((int) (data.getRooms().size() * Math.random())));
-				newClass.setInstructor(data.getInstructors().get((int) (data.getInstructors().size() * Math.random())));
+				newClass.setMeetingTime(data.getMeetingTimes().get((int) (data.getMeetingTimes().size() * generator.nextDouble(1))));
+				newClass.setRoom(data.getRooms().get((int) (data.getRooms().size() * generator.nextDouble(1))));
+				newClass.setInstructor(data.getInstructors().get((int) (data.getInstructors().size() * generator.nextDouble(1))));
 				classes.add(newClass);
 			});
 		});
 		return this;
 	}
 	
+	public Schedule initializeDefault(Random generator) {
+		new ArrayList<Department>(data.getDepts()).forEach(dept -> {
+			dept.getCourses().forEach(course -> {
+				Class newClass = new Class(classNumb++, dept, course);
+				newClass.setMeetingTime(data.getMeetingTimes().get((int) (data.getMeetingTimes().size() * generator.nextDouble(1))));
+				newClass.setRoom(data.getRooms().get((int) (data.getRooms().size() * generator.nextDouble(1))));
+				newClass.setInstructor(data.getInstructors().get((int) (data.getInstructors().size() * generator.nextDouble(1))));
+				classes.add(newClass);
+			});
+		});
+		return this;
+	}
+
+
 	public int getNumbOfConflicts() {
 		return numbOfConflicts;
 	}
@@ -39,6 +55,10 @@ public class Schedule {
 	public ArrayList<Class> getClasses() {
 		isFitnessChanged = true;
 		return classes;
+	}
+
+	public void setClasses(ArrayList<Class> newClasses) {
+		classes = newClasses;
 	}
 	
 	public double getFitness() {
@@ -62,6 +82,7 @@ public class Schedule {
 				}
 			});
 		});
+
 		return 1/(double)(numbOfConflicts+1);
 	}
 	public String toString() {	//return the classes in a schedule

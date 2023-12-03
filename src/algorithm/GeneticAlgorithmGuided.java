@@ -3,10 +3,12 @@ import java.util.ArrayList;
 import java.util.stream.IntStream;
 import java.util.Random;
 
-public class GeneticAlgorithm implements Evolution{
+import model.Class;
+
+public class GeneticAlgorithmGuided implements Evolution{
 	private Data data;
 	
-	public GeneticAlgorithm(Data data) {
+	public GeneticAlgorithmGuided(Data data) {
 		this.data = data;
 	}
 	
@@ -28,8 +30,8 @@ public class GeneticAlgorithm implements Evolution{
 		});
 		return crossoverPopulation;
 	}
-
 	public Schedule crossoverSchedule(Schedule schedule1, Schedule schedule2, Random generator) {
+
 		Schedule crossoverSchedule = new Schedule(data).initialize(generator);
 		IntStream.range(0,  crossoverSchedule.getClasses().size()).forEach(x -> {
 			if(generator.nextDouble(1) > 0.5)
@@ -39,7 +41,6 @@ public class GeneticAlgorithm implements Evolution{
 		});
 		return crossoverSchedule;
 	}
-
 	public Population mutatePopulation(Population population, Random generator) {
 		Population mutatePopulation = new Population(population.getSchedules().size(), data, generator);
 		ArrayList<Schedule> schedules = mutatePopulation.getSchedules();
@@ -50,11 +51,24 @@ public class GeneticAlgorithm implements Evolution{
 		return mutatePopulation;
 	}
 	public Schedule mutateSchedule(Schedule mutateSchedule, Random generator) {
-		Schedule schedule = new Schedule(data).initialize(generator);
-		IntStream.range(0,  mutateSchedule.getClasses().size()).forEach(x -> {
-			if(Driver.MUTATION_RATE > generator.nextDouble(1))
-				mutateSchedule.getClasses().set(x,  schedule.getClasses().get(x));
+		//Schedule schedule = new Schedule(data).initialize();
+		
+		ArrayList<Class> classes = mutateSchedule.getClasses();
+		Data data = mutateSchedule.getData();
+
+		//Make list of all room meeting time combinations
+		ArrayList<String> takenRoomTimeCombos = new ArrayList<String>();
+		classes.forEach(x -> {
+			takenRoomTimeCombos.add("" + x.getRoom().getNumber() + x.getMeetingTime().getId());
 		});
+
+		classes.forEach(x -> {
+			
+			x = guidedCreep(x, data, classes);
+			
+			
+		});
+		mutateSchedule.setClasses(classes);
 		return mutateSchedule;
 	}
 
@@ -64,5 +78,58 @@ public class GeneticAlgorithm implements Evolution{
 			tournamentPopulation.getSchedules().set(x, population.getSchedules().get((int)(generator.nextDouble(1) * population.getSchedules().size())));
 		});
 		return tournamentPopulation;
+	}
+
+
+
+	private Class guidedCreep(Class mutateClass, Data data, ArrayList<Class> classes) {
+		boolean roomChanged = false;
+		
+		if(mutateClass.getRoom().getSeatingCapacity() < mutateClass.getCourse().getMaxNumbOfStudents()) {
+			int oldRoomIndex = data.getRooms().indexOf(mutateClass.getRoom());
+			if(data.getRooms().size() <= (oldRoomIndex + 1)){
+				mutateClass.setRoom(data.getRooms().get(0));
+			}
+			else {
+				mutateClass.setRoom(data.getRooms().get(oldRoomIndex + 1));
+
+			}
+			
+			roomChanged = true;
+		}
+		
+		final boolean roomChangeFromCapacity = roomChanged;
+		classes.stream().filter(y -> classes.indexOf(y) >= classes.indexOf(mutateClass)).forEach(y -> {
+					if(mutateClass.getMeetingTime() == y.getMeetingTime() && mutateClass.getId() != y.getId()) {
+						if(mutateClass.getRoom() == y.getRoom()) {
+							if (!roomChangeFromCapacity) {
+								int oldRoomIndex = data.getRooms().indexOf(mutateClass.getRoom());
+								if(data.getRooms().size() <= (oldRoomIndex + 1)){
+									mutateClass.setRoom(data.getRooms().get(0));
+		
+								}
+								else {
+									mutateClass.setRoom(data.getRooms().get(oldRoomIndex + 1));
+								}
+								if (mutateClass.getRoom().getNumber().equals(data.getRooms().get(oldRoomIndex).getNumber())) {
+									System.out.println("Error");
+								}
+							}
+						}
+						
+						if(mutateClass.getInstructor() == y.getInstructor()) {
+							int oldInstructorIndex = data.getInstructors().indexOf(mutateClass.getInstructor());
+							if(data.getInstructors().size() <= (oldInstructorIndex + 1)){
+									mutateClass.setInstructor(data.getInstructors().get(0));
+								}
+							else {
+								mutateClass.setInstructor(data.getInstructors().get(oldInstructorIndex + 1));
+							}
+						}
+						
+					}
+				});
+		
+		return mutateClass;
 	}
 }

@@ -1,5 +1,7 @@
 package algorithm;
 import java.util.ArrayList;
+import java.util.Random;
+
 import model.Class;
 
 public class Driver {
@@ -57,6 +59,9 @@ public class Driver {
 		Driver driver = new Driver();
 		driver.data = new Data();
 		int generationNumber = 0;
+		Random crossGenerator = new Random(15);
+
+
 		driver.printAvailableData();
 		System.out.println("> Generation Number: "+generationNumber);
 		System.out.print("  Schedule # |                                            ");
@@ -65,10 +70,15 @@ public class Driver {
 		System.out.print("------------------------------------------------------------------------------------");
 		System.out.println("------------------------------------------------------------------------------------");
 		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(driver.data);
-		Population population = new Population(Driver.POPULATION_SIZE, driver.data).sortbyFitness();
+		Population population = new Population(Driver.POPULATION_SIZE, driver.data, crossGenerator);
+
+		population.defaultPopulation(Driver.POPULATION_SIZE, driver.data);
+		population = population.sortbyFitness();
+
 		population.getSchedules().forEach(schedule -> System.out.println("       "+driver.scheduleNumb++ +"      | "+ schedule + "  |  " +String.format("%.5f", schedule.getFitness()) + "  |  " +schedule.getNumbOfConflicts()));
 		driver.printScheduleAsTable(population.getSchedules().get(0), generationNumber);
 		driver.classNumb = 1;
+
 		while(population.getSchedules().get(0).getFitness() != 1.0) {
 			++generationNumber;
 			//System.out.print("  Schedule # |                                            ");
@@ -76,7 +86,7 @@ public class Driver {
 			//System.out.println( "                                   | Fitness | Conflicts");
 			//System.out.print("------------------------------------------------------------------------------------");
 			//System.out.println("------------------------------------------------------------------------------------");
-			population = geneticAlgorithm.evolve(population).sortbyFitness();
+			population = geneticAlgorithm.evolve(population, crossGenerator).sortbyFitness();
             driver.scheduleNumb = 0;
             
 			//population.getSchedules().forEach(schedule -> System.out.println("       "+driver.scheduleNumb++ +"      | "+ schedule + "  |  " +String.format("%.5f", schedule.getFitness()) + "  |  " +schedule.getNumbOfConflicts()));
