@@ -56,6 +56,7 @@ public class Driver {
 		System.out.println("------------------------------------------------------------------------------------------");
 	}
 	public static void main(String[] args) {
+		final long startTime = System.currentTimeMillis();
 		Driver driver = new Driver();
 		driver.data = new Data();
 		int generationNumber = 0;
@@ -69,7 +70,7 @@ public class Driver {
 		System.out.println( "                                   | Fitness | Conflicts");
 		System.out.print("------------------------------------------------------------------------------------");
 		System.out.println("------------------------------------------------------------------------------------");
-		GeneticAlgorithmGuided geneticAlgorithm = new GeneticAlgorithmGuided(driver.data);
+		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(driver.data);
 		Population population = new Population(Driver.POPULATION_SIZE, driver.data, crossGenerator);
 		
 		population.defaultPopulation(Driver.POPULATION_SIZE, driver.data);
@@ -81,21 +82,24 @@ public class Driver {
 		driver.classNumb = 1;
 		while(population.getSchedules().get(0).getFitness() != 1.0) {
 			++generationNumber;
-			System.out.print("  Schedule # |                                            ");
-			System.out.print("Classes [dept,class,room,instructor,meeting-time]        ");
-			System.out.println( "                                   | Fitness | Conflicts");
-			System.out.print("------------------------------------------------------------------------------------");
-			System.out.println("------------------------------------------------------------------------------------");
+			//System.out.print("  Schedule # |                                            ");
+			//System.out.print("Classes [dept,class,room,instructor,meeting-time]        ");
+			//System.out.println( "                                   | Fitness | Conflicts");
+			//System.out.print("------------------------------------------------------------------------------------");
+			//System.out.println("------------------------------------------------------------------------------------");
 			population = geneticAlgorithm.evolve(population, crossGenerator).sortbyFitness();
             driver.scheduleNumb = 0;
             
-			population.getSchedules().forEach(schedule -> System.out.println("       "+driver.scheduleNumb++ +"      | "+ schedule + "  |  " +String.format("%.5f", schedule.getFitness()) + "  |  " +schedule.getNumbOfConflicts()));
+			//population.getSchedules().forEach(schedule -> System.out.println("       "+driver.scheduleNumb++ +"      | "+ schedule + "  |  " +String.format("%.5f", schedule.getFitness()) + "  |  " +schedule.getNumbOfConflicts()));
             if (population.getSchedules().get(0).getFitness() == 1) {
                 driver.printScheduleAsTable(population.getSchedules().get(0), generationNumber);
             }
             //driver.printScheduleAsTable(population.getSchedules().get(0), generationNumber);
 			driver.classNumb = 1;
 		}
+		final long endTime = System.currentTimeMillis();
+
+		System.out.println("Total execution time: " + (endTime - startTime) + " ms");
 	}
 
 }

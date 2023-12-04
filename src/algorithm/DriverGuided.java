@@ -1,11 +1,10 @@
 package algorithm;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import model.Class;
 
-public class DriverCo {
+public class DriverGuided {
 	public static final int POPULATION_SIZE = 20;
 	public static final double MUTATION_RATE = 0.3;
 	public static final double CROSSOVER_RATE = 0.8;
@@ -58,7 +57,7 @@ public class DriverCo {
 	}
 	public static void main(String[] args) {
 		final long startTime = System.currentTimeMillis();
-		DriverCo driver = new DriverCo();
+		DriverGuided driver = new DriverGuided();
 		driver.data = new Data();
 		int generationNumber = 0;
 		Random crossGenerator = new Random(15);
@@ -71,39 +70,36 @@ public class DriverCo {
 		System.out.println( "                                   | Fitness | Conflicts");
 		System.out.print("------------------------------------------------------------------------------------");
 		System.out.println("------------------------------------------------------------------------------------");
-		CoevolutionAlgorithm geneticAlgorithm = new CoevolutionAlgorithm(driver.data, crossGenerator);
-		Boolean passed = geneticAlgorithm.checkFitness();
-		if (passed){
-			System.out.println("Done");
-		}
-
+		GeneticAlgorithmGuided geneticAlgorithm = new GeneticAlgorithmGuided(driver.data);
+		Population population = new Population(Driver.POPULATION_SIZE, driver.data, crossGenerator);
+		
+		population.defaultPopulation(Driver.POPULATION_SIZE, driver.data);
+		population = population.sortbyFitness();
+		
+		population.getSchedules().forEach(schedule -> System.out.println("       "+driver.scheduleNumb++ +"      | "+ schedule + "  |  " +String.format("%.5f", schedule.getFitness()) + "  |  " +schedule.getNumbOfConflicts()));
+		driver.printScheduleAsTable(population.getSchedules().get(0), generationNumber);
 		
 		driver.classNumb = 1;
-		while(!passed) {
+		while(population.getSchedules().get(0).getFitness() != 1.0) {
 			++generationNumber;
-			
+			//System.out.print("  Schedule # |                                            ");
+			//System.out.print("Classes [dept,class,room,instructor,meeting-time]        ");
+			//System.out.println( "                                   | Fitness | Conflicts");
+			//System.out.print("------------------------------------------------------------------------------------");
+			//System.out.println("------------------------------------------------------------------------------------");
+			population = geneticAlgorithm.evolve(population, crossGenerator).sortbyFitness();
             driver.scheduleNumb = 0;
-            passed = geneticAlgorithm.evolve(crossGenerator);
-			List<Population> populations = geneticAlgorithm.getPopulations();
-			if (passed) {
-				if (populations.get(0).sortbyFitness().getSchedules().get(0).getFitness() == 1.0) {
-					Population optPopulation = populations.get(0);
-					driver.printScheduleAsTable(optPopulation.getSchedules().get(0), generationNumber);
-				}
-				else if (populations.get(1).sortbyFitness().getSchedules().get(0).getFitness() == 1.0) {
-					Population optPopulation = populations.get(1);
-					driver.printScheduleAsTable(optPopulation.getSchedules().get(0), generationNumber);
-				}
-				else if (populations.get(2).sortbyFitness().getSchedules().get(0).getFitness() == 1.0) {
-					Population optPopulation = populations.get(2);
-					driver.printScheduleAsTable(optPopulation.getSchedules().get(0), generationNumber);
-				}
-			}
+            
+			//population.getSchedules().forEach(schedule -> System.out.println("       "+driver.scheduleNumb++ +"      | "+ schedule + "  |  " +String.format("%.5f", schedule.getFitness()) + "  |  " +schedule.getNumbOfConflicts()));
+            if (population.getSchedules().get(0).getFitness() == 1) {
+                driver.printScheduleAsTable(population.getSchedules().get(0), generationNumber);
+            }
+            //driver.printScheduleAsTable(population.getSchedules().get(0), generationNumber);
 			driver.classNumb = 1;
 		}
 		final long endTime = System.currentTimeMillis();
 
-		System.out.println("Total execution time: " + (endTime - startTime) + " ms");	
+		System.out.println("Total execution time: " + (endTime - startTime) + " ms");
 	}
 
 }
