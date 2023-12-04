@@ -91,8 +91,8 @@ public class Data {
         //Course course6_2 = new Course("C6.2", "CS3270", new ArrayList<Instructor>(Arrays.asList(instructor7)), 50);
         //Course course6_3 = new Course("C6.3", "CS3270", new ArrayList<Instructor>(Arrays.asList(instructor7)), 50);
 
-        Course course7_1 = new Course("C7.1", "CS4260", new ArrayList<Instructor>(Arrays.asList(instructor5)), 50);
-        Course course7_2 = new Course("C7.2", "CS4260", new ArrayList<Instructor>(Arrays.asList(instructor8)), 35);
+        //Course course7_1 = new Course("C7.1", "CS4260", new ArrayList<Instructor>(Arrays.asList(instructor5)), 50);
+        //Course course7_2 = new Course("C7.2", "CS4260", new ArrayList<Instructor>(Arrays.asList(instructor8)), 35);
 
         //Course course8_1 = new Course("C8.1", "CS4262", new ArrayList<Instructor>(Arrays.asList(instructor9)), 35);
         //Course course8_2 = new Course("C8.2", "CS4262", new ArrayList<Instructor>(Arrays.asList(instructor10)), 20);
@@ -102,8 +102,8 @@ public class Data {
         //Course course9_3 = new Course("C9.3", "CS3281", new ArrayList<Instructor>(Arrays.asList(instructor17)), 13);
 
         // course6_1, course6_2, course6_3, course7_1, course7_2, course8_1, course8_1, course9_1, course9_2, course9_3
-        courses = new ArrayList<Course>(Arrays.asList(course1_1, course1_2, course1_3, course2_1, course2_2, course2_3, course2_4, course3_1, course3_2, course3_3, course3_4, course3_5, course4_1, course4_2, course4_3, course4_4, course5_1, course5_2, course5_3, course7_1, course7_2));
-		Department dept1 = new Department("CS", new ArrayList<Course>(Arrays.asList(course1_1, course1_2, course1_3, course2_1, course2_2, course2_3, course2_4, course3_1, course3_2, course3_3, course3_4, course3_5, course4_1, course4_2, course4_3, course4_4, course5_1, course5_2, course5_3, course7_1, course7_2)));
+        courses = new ArrayList<Course>(Arrays.asList(course1_1, course1_2, course1_3, course2_1, course2_2, course2_3, course2_4, course3_1, course3_2, course3_3, course3_4, course3_5, course4_1, course4_2, course4_3, course4_4, course5_1, course5_2, course5_3));
+		Department dept1 = new Department("CS", new ArrayList<Course>(Arrays.asList(course1_1, course1_2, course1_3, course2_1, course2_2, course2_3, course2_4, course3_1, course3_2, course3_3, course3_4, course3_5, course4_1, course4_2, course4_3, course4_4, course5_1, course5_2, course5_3)));
 		depts = new ArrayList<Department>(Arrays.asList(dept1));
 		depts.forEach(x -> numberOfClasses += x.getCourses().size());	//store number of total number of classes from all depts
 		return this;
