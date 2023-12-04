@@ -27,7 +27,9 @@ public class Schedule {
 				Class newClass = new Class(classNumb++, dept, course);
 				newClass.setMeetingTime(data.getMeetingTimes().get((int) (data.getMeetingTimes().size() * generator.nextDouble(1))));
 				newClass.setRoom(data.getRooms().get((int) (data.getRooms().size() * generator.nextDouble(1))));
-				newClass.setInstructor(data.getInstructors().get((int) (data.getInstructors().size() * generator.nextDouble(1))));
+				//System.out.println();
+				//System.out.println(course.getInstructors().size());
+				newClass.setInstructor(course.getInstructors().get(0));
 				classes.add(newClass);
 			});
 		});
@@ -40,7 +42,7 @@ public class Schedule {
 				Class newClass = new Class(classNumb++, dept, course);
 				newClass.setMeetingTime(data.getMeetingTimes().get((int) (data.getMeetingTimes().size() * generator.nextDouble(1))));
 				newClass.setRoom(data.getRooms().get((int) (data.getRooms().size() * generator.nextDouble(1))));
-				newClass.setInstructor(data.getInstructors().get((int) (data.getInstructors().size() * generator.nextDouble(1))));
+				newClass.setInstructor(course.getInstructors().get(0));
 				classes.add(newClass);
 			});
 		});

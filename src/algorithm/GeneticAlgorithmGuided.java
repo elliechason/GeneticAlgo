@@ -118,12 +118,13 @@ public class GeneticAlgorithmGuided implements Evolution{
 						}
 						
 						if(mutateClass.getInstructor() == y.getInstructor()) {
-							int oldInstructorIndex = data.getInstructors().indexOf(mutateClass.getInstructor());
-							if(data.getInstructors().size() <= (oldInstructorIndex + 1)){
-									mutateClass.setInstructor(data.getInstructors().get(0));
+							int oldTimeIndex = data.getMeetingTimes().indexOf(mutateClass.getMeetingTime());
+							
+							if(data.getMeetingTimes().size() <= (oldTimeIndex + 1)){
+									mutateClass.setMeetingTime(data.getMeetingTimes().get(0));
 								}
 							else {
-								mutateClass.setInstructor(data.getInstructors().get(oldInstructorIndex + 1));
+								mutateClass.setMeetingTime(data.getMeetingTimes().get(oldTimeIndex + 1));
 							}
 						}
 						
