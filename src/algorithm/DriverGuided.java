@@ -1,6 +1,7 @@
 package algorithm;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 import model.Class;
 
@@ -55,12 +56,50 @@ public class DriverGuided {
 		System.out.print("------------------------------------------------------------------------------------------");
 		System.out.println("------------------------------------------------------------------------------------------");
 	}
+
+	public static int getInput() {
+		Scanner input = new Scanner(System.in);
+		System.out.println("How many classes would you like to schedule? To avoid long runtimes, enter either 19 or 20:");
+		String num = input.nextLine();
+		int size = 0;
+		switch(num) {
+			case "19":
+				size = 19;
+				break;
+			case "20":
+				size = 20;
+				break;	
+			default:
+				System.out.println("Sorry, that is not an acceptable input");
+				size = getInput();
+		}
+		return size;
+	}
+
+	public static int getSeed() {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Enter an integer for the random seed value:");
+		int num = 0;
+		if (input.hasNextInt()) { 
+			num = input.nextInt(); 
+		} 
+		// if no Int is found, 
+		// print "Not Found:" and the token 
+		else { 
+			System.out.println("Not a valid input, please try again"); 
+			num = getSeed();
+		}
+		return num;
+	}
 	public static void main(String[] args) {
 		final long startTime = System.currentTimeMillis();
 		DriverGuided driver = new DriverGuided();
-		driver.data = new Data();
+		int size = getInput();
+		driver.data = new Data(size);
 		int generationNumber = 0;
-		Random crossGenerator = new Random(15);
+
+
+		Random crossGenerator = new Random(getSeed());
 
 
 		driver.printAvailableData();
@@ -96,6 +135,10 @@ public class DriverGuided {
             }
             //driver.printScheduleAsTable(population.getSchedules().get(0), generationNumber);
 			driver.classNumb = 1;
+			if ((System.currentTimeMillis() - startTime)>1000000){
+				System.out.println(generationNumber);
+			}
+			
 		}
 		final long endTime = System.currentTimeMillis();
 

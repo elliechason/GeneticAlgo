@@ -13,7 +13,7 @@ public class GeneticAlgorithmGuided implements Evolution{
 	}
 	
 	public Population evolve(Population population, Random generator) {
-		return mutatePopulation(crossoverPopulation(population, generator), generator);
+		return mutatePopulation(population, generator);
 	}
 	public Population crossoverPopulation(Population population, Random generator) {
 		Population crossoverPopulation = new Population(population.getSchedules().size(), data, generator);
@@ -81,7 +81,7 @@ public class GeneticAlgorithmGuided implements Evolution{
 	}
 
 
-
+	//guided creep with step 1
 	private Class guidedCreep(Class mutateClass, Data data, ArrayList<Class> classes) {
 		boolean roomChanged = false;
 		

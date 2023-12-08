@@ -1,6 +1,7 @@
 package algorithm;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 import model.Class;
 
@@ -55,12 +56,59 @@ public class Driver {
 		System.out.print("------------------------------------------------------------------------------------------");
 		System.out.println("------------------------------------------------------------------------------------------");
 	}
+
+	public static int getInput() {
+		Scanner input = new Scanner(System.in);
+		System.out.println("How many classes would you like to schedule? Enter a number from 19 to 23:");
+		String num = input.nextLine();
+		int size = 0;
+		switch(num) {
+			case "19":
+				size = 19;
+				break;
+			case "20":
+				size = 20;
+				break;
+			case "21":
+				size = 21;
+				break;
+			case "22":
+				size = 22;
+				break;
+			case "23":
+				size = 23;
+				break;	
+			default:
+				System.out.println("Sorry, that is not an acceptable input");
+				size = getInput();
+		}
+		return size;
+	}
+
+	public static int getSeed() {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Enter an integer for the random seed value:");
+		int num = 0;
+		if (input.hasNextInt()) { 
+			num = input.nextInt(); 
+		} 
+		// if no Int is found, 
+		// print "Not Found:" and the token 
+		else { 
+			System.out.println("Not a valid input, please try again"); 
+			num = getSeed();
+		}
+		return num;
+	}
 	public static void main(String[] args) {
 		final long startTime = System.currentTimeMillis();
 		Driver driver = new Driver();
-		driver.data = new Data();
+		int size = getInput();
+		
+		driver.data = new Data(size);
+		
 		int generationNumber = 0;
-		Random crossGenerator = new Random(15);
+		Random crossGenerator = new Random(getSeed());
 
 
 		driver.printAvailableData();
@@ -82,20 +130,16 @@ public class Driver {
 		driver.classNumb = 1;
 		while(population.getSchedules().get(0).getFitness() != 1.0) {
 			++generationNumber;
-			//System.out.print("  Schedule # |                                            ");
-			//System.out.print("Classes [dept,class,room,instructor,meeting-time]        ");
-			//System.out.println( "                                   | Fitness | Conflicts");
-			//System.out.print("------------------------------------------------------------------------------------");
-			//System.out.println("------------------------------------------------------------------------------------");
+			
 			population = geneticAlgorithm.evolve(population, crossGenerator).sortbyFitness();
             driver.scheduleNumb = 0;
             
-			//population.getSchedules().forEach(schedule -> System.out.println("       "+driver.scheduleNumb++ +"      | "+ schedule + "  |  " +String.format("%.5f", schedule.getFitness()) + "  |  " +schedule.getNumbOfConflicts()));
             if (population.getSchedules().get(0).getFitness() == 1) {
                 driver.printScheduleAsTable(population.getSchedules().get(0), generationNumber);
             }
-            //driver.printScheduleAsTable(population.getSchedules().get(0), generationNumber);
+            
 			driver.classNumb = 1;
+			
 		}
 		final long endTime = System.currentTimeMillis();
 
