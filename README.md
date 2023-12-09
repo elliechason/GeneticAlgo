@@ -62,24 +62,29 @@ While each algorithm will return the optimized schedule, the number of generatio
 To achieve the results shown during the presentation, enter the corresponding number of classes (shown at the top left of each grid) and random seed 15. Please note that you may only enter class size 19-23 for Standard GA, 19-20 for Guided GA, and 19-23 for Coevolution GA (although 19-21 is advised for shorter runtimes). This is to prevent long runtimes of over 30 minutes.
 
 Dataset: 19 classes
+
   Standard GA: 314 generations, 631 ms
   GA with Guided Creep Mutation: 5 generations, 279 ms
   Coevolution GA: 1194 generations, 2855 ms
 
 Dataset: 20 classes
+
   Standard GA: 187 generations, 396 ms
   GA with Guided Creep Mutation: 9 generations, 193 ms
   Coevolution GA: 674 generations, 1943 ms
 
 Dataset: 21 classes
+
   Standard GA: 736 generations, 788 ms
   Coevolution GA: 36679 generations, 74178 ms
 
 Dataset: 22 classes
+
   Standard GA: 141 generations, 536 ms
   Coevolution GA: 69505 generations, 155716 ms
 
 Dataset: 23 classes
+
   Standard GA: 414 generations, 728 ms
   Coevolution GA: 169871 generations, 417336 ms
 
